@@ -52,6 +52,7 @@ variables used by the tools and Docker setup:
 - `CORPUS_PATH` – path to the text corpus
 - `QNL_EMBED_MODEL` – name of the embedding model
 - `QNL_MODEL_PATH` – directory containing QNL model weights
+- `EMBED_MODEL_PATH` – optional path to the embedding model
 - `VOICE_TONE_PATH` – voice tone preset directory
 - `VECTOR_DB_PATH` – vector database location
   (defaults to `http://localhost:3001/api`)

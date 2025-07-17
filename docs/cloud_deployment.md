@@ -17,6 +17,7 @@ Copy `secrets.env.example` to `secrets.env` and fill out the variables required 
 - `CORPUS_PATH` – path to your text corpus
 - `QNL_EMBED_MODEL` – embedding model name (default `all-MiniLM-L6-v2`)
 - `QNL_MODEL_PATH` – directory containing QNL model weights
+- `EMBED_MODEL_PATH` – optional path to the embedding model
 - `VOICE_TONE_PATH` – directory of voice tone presets
 - `VECTOR_DB_PATH` – location of the vector store
 - `RETRAIN_THRESHOLD` – number of feedback items before retraining

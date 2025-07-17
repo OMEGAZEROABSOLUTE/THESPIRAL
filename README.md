@@ -65,7 +65,7 @@ pip install .[dev]
    environment variables such as `HF_TOKEN`, `GITHUB_TOKEN`,
    `OPENAI_API_KEY`, `GLM_API_URL`, `GLM_API_KEY`, `GLM_SHELL_URL`,
    `GLM_SHELL_KEY`, `REFLECTION_INTERVAL`, `CORPUS_PATH`,
-   `QNL_EMBED_MODEL`, `QNL_MODEL_PATH`, `VOICE_TONE_PATH`,
+   `QNL_EMBED_MODEL`, `QNL_MODEL_PATH`, `EMBED_MODEL_PATH`, `VOICE_TONE_PATH`,
    `VECTOR_DB_PATH`, `WEB_CONSOLE_API_URL` (`QNL_EMBED_MODEL` is the
    SentenceTransformer used for QNL embeddings). `VECTOR_DB_PATH`
    points to the ChromaDB directory used for document storage.
