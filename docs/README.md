@@ -18,6 +18,7 @@ The `docs` directory contains reference material for Spiral OS.
 - [avatar_ethics.md](avatar_ethics.md)
 - [avatar_pipeline.md](avatar_pipeline.md)
 - [cloud_deployment.md](cloud_deployment.md)
+- [os_guardian.md](os_guardian.md)
 - [os_guardian_container.md](os_guardian_container.md)
 - [os_guardian_planning.md](os_guardian_planning.md)
 - [os_guardian_permissions.md](os_guardian_permissions.md)
