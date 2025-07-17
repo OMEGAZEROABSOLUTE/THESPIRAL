@@ -6,6 +6,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
+./scripts/check_prereqs.sh
+
 if [ -f "secrets.env" ]; then
     set -a
     # shellcheck source=/dev/null
