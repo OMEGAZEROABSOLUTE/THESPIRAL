@@ -34,8 +34,9 @@ def test_crown_console_startup(monkeypatch):
     assert "crown_model_launcher" in calls
     assert "launch_servants" in calls
     assert "python console_interface.py" in calls
-    assert (
-        calls.index("crown_model_launcher")
-        < calls.index("launch_servants")
-        < calls.index("python console_interface.py")
-    )
+    launcher_idx = calls.index("crown_model_launcher")
+    servants_idx = calls.index("launch_servants")
+    console_idx = calls.index("python console_interface.py")
+
+    assert launcher_idx < servants_idx
+    assert servants_idx < console_idx
