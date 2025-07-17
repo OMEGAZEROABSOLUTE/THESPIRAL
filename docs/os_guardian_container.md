@@ -10,6 +10,9 @@ Set the following variables to configure the container:
 - `YOLO_MODEL_PATH` – optional path to YOLOv8 weights for screen detection.
 - `TESSDATA_PREFIX` – directory containing Tesseract language data.
 - `HF_HOME` – optional location for cached Hugging Face models.
+- `OG_POLICY` – permission mode for high-risk actions (`allow`, `ask`, `deny`).
+- `OG_ALLOWED_APPS`, `OG_ALLOWED_DOMAINS`, `OG_ALLOWED_COMMANDS` – whitelists
+  for the safety module.
 
 Variables from `secrets.env` are also loaded by the helper script.
 
