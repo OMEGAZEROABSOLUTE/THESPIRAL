@@ -62,6 +62,11 @@ def _init_memory(cfg: dict) -> None:
     if mem_dir:
         mem_dir = Path(mem_dir)
         vec_path = mem_dir / "vector_memory"
+        corpus_path = mem_dir / "chroma"
+        vec_path.mkdir(parents=True, exist_ok=True)
+        corpus_path.mkdir(parents=True, exist_ok=True)
+        logger.info("memory directories created: %s, %s", vec_path, corpus_path)
+
         os.environ["VECTOR_DB_PATH"] = str(vec_path)
         logger.info("initializing vector memory at %s", vec_path)
         try:
@@ -70,7 +75,6 @@ def _init_memory(cfg: dict) -> None:
         except Exception as exc:  # pragma: no cover - optional deps
             logger.warning("Vector memory unavailable: %s", exc)
 
-        corpus_path = mem_dir / "chroma"
         corpus_memory.CHROMA_DIR = corpus_path
         logger.info("initializing corpus memory at %s", corpus_path)
         try:
