@@ -512,6 +512,13 @@ is launched using Docker or `vllm`.
 ./launch_servants.sh
 ```
 
+Use `start_crown_console.sh` to launch these services and automatically
+open the interactive console once the endpoints are ready.
+
+```bash
+./start_crown_console.sh
+```
+
 Once the service is running you can start the REPL:
 
 ```bash
