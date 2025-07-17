@@ -400,6 +400,13 @@ video appears in your browser. Generate a short song with
 `play_ritual_music.py` and pass the resulting WAV file to
 `stream_avatar_audio()` to synchronise mouth movement with the audio.
 
+Edit `guides/avatar_config.toml` to customise the avatar's appearance. The file
+defines the `eye_color`, overlay `sigil` and optional `[skins]` table mapping
+personality layers to texture files. Restart the orchestrator after saving
+changes. Optional lip‑sync packages such as **SadTalker**, **Wav2Lip** and
+**ControlNet** are documented in
+[docs/avatar_pipeline.md](docs/avatar_pipeline.md).
+
 The sovereign voice milestone also lets you feed hexadecimal bytes into the
 pipeline:
 
