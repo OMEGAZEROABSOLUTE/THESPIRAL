@@ -573,6 +573,21 @@ crown> hello
 
 The prompt `crown>` accepts natural language and `/exit` quits the session.
 
+### Avatar Console
+
+Run `start_avatar_console.sh` to launch the Crown services and begin streaming
+the avatar alongside the console. The script calls
+`start_crown_console.sh` in the background, starts `video_stream.py` and tails
+`logs/INANNA_AI.log`. Set the optional `AVATAR_SCALE` environment variable to
+adjust the video size.
+
+Type `appear to me` at the prompt to toggle the avatar stream. This command is
+handled by :mod:`core.task_parser` and switches
+`context_tracker.state.avatar_loaded` so the video engine begins emitting
+frames. For guidance on customizing the avatar textures edit
+`guides/avatar_config.toml` as described in
+[`docs/avatar_pipeline.md`](docs/avatar_pipeline.md).
+
 ## HTTP Interface
 
 `server.py` exposes a small FastAPI application with a `/glm-command` endpoint.
