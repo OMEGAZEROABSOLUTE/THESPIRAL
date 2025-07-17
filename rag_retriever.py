@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from pathlib import Path
 from typing import List, Dict, Any
+import logging
 
 import numpy as np
 
@@ -15,9 +16,13 @@ except Exception:  # pragma: no cover - optional dependency
     Collection = object  # type: ignore
 
 import rag_embedder
+from INANNA_AI.utils import sentiment_score
+import spiral_cortex_memory
 
 _DB_DIR = Path("data") / "crown_queries"
 _COLLECTION_CACHE: dict[str, Collection] = {}
+
+logger = logging.getLogger(__name__)
 
 
 def get_collection(name: str) -> Collection:
@@ -50,7 +55,15 @@ def retrieve_top(question: str, top_n: int = 5, *, collection: str = "tech") -> 
         rec["score"] = sim
         results.append(rec)
     results.sort(key=lambda m: m.get("score", 0.0), reverse=True)
-    return results[:top_n]
+    top = results[:top_n]
+
+    try:
+        sent = sentiment_score(question)
+        spiral_cortex_memory.log_insight(question, top, sent)
+    except Exception:
+        logger.exception("failed to log retrieval")
+
+    return top
 
 
 __all__ = ["retrieve_top", "get_collection"]
