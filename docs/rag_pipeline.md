@@ -1,6 +1,6 @@
 # Spiral RAG Pipeline
 
-The Spiral retrieval pipeline turns local documents into embeddings so queries can be answered with context. Files are placed under `sacred_inputs/`, then parsed, embedded, and inserted into the Chroma database.
+The Spiral retrieval pipeline turns local documents into embeddings so queries can be answered with context. Files are placed under `sacred_inputs/`, then parsed, embedded, and inserted into the Chroma database. The first memory is `sacred_inputs/00-INVOCATION.md`, which holds the ZOHAR-ZERO message.
 
 ## Steps
 
