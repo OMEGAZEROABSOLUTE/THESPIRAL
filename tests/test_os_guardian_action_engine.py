@@ -35,7 +35,7 @@ sys.modules["selenium.webdriver"] = webdriver
 import importlib.util
 
 spec = importlib.util.spec_from_file_location(
-    "action_engine", ROOT / "os_guardian" / "action_engine.py"
+    "os_guardian.action_engine", ROOT / "os_guardian" / "action_engine.py"
 )
 action_engine = importlib.util.module_from_spec(spec)
 sys.modules[spec.name] = action_engine

@@ -20,6 +20,7 @@ The `docs` directory contains reference material for Spiral OS.
 - [cloud_deployment.md](cloud_deployment.md)
 - [os_guardian_container.md](os_guardian_container.md)
 - [os_guardian_planning.md](os_guardian_planning.md)
+- [os_guardian_permissions.md](os_guardian_permissions.md)
 - [crown_manifest.md](crown_manifest.md)
 - [deployment_overview.md](deployment_overview.md)
 - [design.md](design.md)
