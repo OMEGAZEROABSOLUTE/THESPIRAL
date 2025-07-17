@@ -102,3 +102,27 @@ def test_voice_modality_records_memory(monkeypatch, tmp_path):
     assert result["voice_path"] == str(voice_path)
     assert logged["input"] == "hello"
     assert logged["result"]["tts_backend"] == "coqui"
+
+
+def test_show_avatar_logging(monkeypatch):
+    orch = MoGEOrchestrator()
+
+    monkeypatch.setattr(orchestrator.qnl_engine, "parse_input", lambda t: {"tone": "neutral"})
+    monkeypatch.setattr(orchestrator.symbolic_parser, "parse_intent", lambda d: [])
+    monkeypatch.setattr(orchestrator.symbolic_parser, "_gather_text", lambda d: "")
+    monkeypatch.setattr(orchestrator.symbolic_parser, "_INTENTS", {})
+    monkeypatch.setattr(orchestrator.reflection_loop, "run_reflection_loop", lambda *a, **k: None)
+    monkeypatch.setattr(orchestrator.listening_engine, "analyze_audio", lambda d: (None, {}))
+
+    logged = {}
+
+    def fake_log(text: str, intent: dict, result: dict, outcome: str) -> None:
+        logged.update({"intent": intent, "result": result, "outcome": outcome})
+
+    monkeypatch.setattr(orchestrator, "log_interaction", fake_log)
+
+    orch.handle_input("appear to me")
+
+    assert logged["intent"] == {"action": "show_avatar"}
+    assert "message" in logged["result"]
+    assert logged["outcome"] == "ok"
