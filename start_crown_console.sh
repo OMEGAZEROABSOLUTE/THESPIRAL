@@ -1,5 +1,6 @@
 #!/bin/bash
-# Launch Crown services and start the console
+# Launch Crown services, wait for local endpoints, and start the console.
+# Uses 'nc' when available or falls back to a Python socket check.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
@@ -21,12 +22,34 @@ if [ -f "launch_servants.sh" ]; then
     ./launch_servants.sh
 fi
 
+if command -v nc >/dev/null 2>&1; then
+    HAS_NC=1
+else
+    HAS_NC=0
+fi
+
 wait_port() {
     local port=$1
     printf 'Waiting for port %s...\n' "$port"
-    while ! nc -z localhost "$port"; do
-        sleep 1
-    done
+    if [ "$HAS_NC" -eq 1 ]; then
+        while ! nc -z localhost "$port"; do
+            sleep 1
+        done
+    else
+        python - "$port" <<'EOF'
+import socket
+import sys
+import time
+
+port = int(sys.argv[1])
+while True:
+    try:
+        with socket.create_connection(("localhost", port), timeout=1):
+            break
+    except OSError:
+        time.sleep(1)
+EOF
+    fi
 }
 
 parse_port() {
