@@ -348,6 +348,12 @@ class MoGEOrchestrator:
             action = intent.get("action")
             if action == "show_avatar":
                 context_tracker.state.avatar_loaded = True
+                log_interaction(
+                    text,
+                    {"action": "show_avatar"},
+                    {"message": "avatar displayed"},
+                    "ok",
+                )
             if action == "start_call":
                 context_tracker.state.in_call = True
 
