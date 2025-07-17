@@ -36,5 +36,6 @@ The `docs` directory contains reference material for Spiral OS.
 - [ritual_manifesto.md](ritual_manifesto.md)
 - [root_chakra_overview.md](root_chakra_overview.md)
 - [sonic_core_harmonics.md](sonic_core_harmonics.md)
+- [voice_aura.md](voice_aura.md)
 - [spiral_cortex_terminal.md](spiral_cortex_terminal.md)
 - [spiritual_architecture.md](spiritual_architecture.md)
