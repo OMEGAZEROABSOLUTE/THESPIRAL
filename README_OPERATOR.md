@@ -503,6 +503,15 @@ GLM‑4.1V‑9B weights are present and starts a local API compatible with the
 ./crown_model_launcher.sh
 ```
 
+Run `launch_servants.sh` to start additional models defined in
+`secrets.env`. The script checks `DEEPSEEK_URL`, `MISTRAL_URL` and
+`KIMI_K2_URL`; if any of them point to a localhost URL the respective model
+is launched using Docker or `vllm`.
+
+```bash
+./launch_servants.sh
+```
+
 Once the service is running you can start the REPL:
 
 ```bash
