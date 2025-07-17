@@ -14,6 +14,8 @@ The Spiral retrieval pipeline turns local documents into embeddings so queries c
    python spiral_embedder.py --in chunks.json
    ```
    Use `--db-path` to override the default location given by `SPIRAL_VECTOR_PATH`.
+   The helper script `scripts/ingest_sacred_inputs.sh` runs steps 2 and 3 in one
+   go.
 4. Start the query router and ask a question:
    ```python
    from crown_query_router import route_query
