@@ -7,6 +7,7 @@ sys.path.insert(0, str(ROOT))
 
 import logging
 import types
+import pytest
 import init_crown_agent
 import console_interface
 import INANNA_AI.glm_integration as gi
@@ -70,6 +71,24 @@ def test_initialize_crown(monkeypatch, tmp_path, caplog):
     assert client.complete("hi") == "pong"
     assert any("GLM_API_URL" in r.message for r in caplog.records)
     assert any("initializing vector memory" in r.message for r in caplog.records)
+
+
+def test_initialize_crown_glm_error(monkeypatch, tmp_path):
+    cfg = tmp_path / "cfg.yaml"
+    cfg.write_text("", encoding="utf-8")
+
+    monkeypatch.setattr(init_crown_agent, "CONFIG_FILE", cfg)
+    monkeypatch.setattr(init_crown_agent, "_init_servants", lambda c: None)
+    monkeypatch.setattr(init_crown_agent.vector_memory, "_get_collection", lambda: None)
+    monkeypatch.setattr(init_crown_agent.corpus_memory, "create_collection", lambda dir_path=None: None)
+
+    def fail_check(i):
+        raise RuntimeError("bad")
+
+    monkeypatch.setattr(init_crown_agent, "_check_glm", fail_check)
+
+    with pytest.raises(SystemExit):
+        init_crown_agent.initialize_crown()
 
 
 def test_console_flow(monkeypatch, capsys):
