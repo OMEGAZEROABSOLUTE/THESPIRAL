@@ -49,7 +49,16 @@ To test locally without Vast.ai simply run:
 docker-compose up
 ```
 
-The compose file builds the two services, mounts `data` and `logs`, and exposes ports `8000` and `3001`. Once the containers are running open `web_console/index.html` to issue commands through the FastAPI endpoint.
+The compose file builds the main `INANNA_AI` container and mounts `data`, `logs` and `INANNA_AI/models`. Optional `deepseek`, `mistral` and `kimi_k2` services are also defined. Each exposes its own port and expects a corresponding model directory:
+
+```
+INANNA_AI  -> 8000/8001  INANNA_AI/models
+deepseek   -> 8002       INANNA_AI/models/DeepSeek-V3
+mistral    -> 8003       INANNA_AI/models/Mistral-8x22B
+kimi_k2    -> 8010       INANNA_AI/models/Kimi-K2
+```
+
+Run `docker-compose up` to start everything or specify a subset such as `docker-compose up INANNA_AI deepseek`. Once running, open `web_console/index.html` to issue commands through the FastAPI endpoint.
 
 For details on browser permissions see
 [how_to_use.md](how_to_use.md#connecting-via-webrtc).
