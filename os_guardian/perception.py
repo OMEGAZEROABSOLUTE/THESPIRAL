@@ -3,8 +3,10 @@ from __future__ import annotations
 """Screen capture and GUI detection utilities."""
 
 import logging
+import time
+from dataclasses import dataclass
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import Iterable, List, Optional, Sequence, Tuple
 
 try:  # pragma: no cover - optional dependency
     import cv2  # type: ignore
@@ -34,6 +36,16 @@ except Exception:  # pragma: no cover - optional dependency
 logger = logging.getLogger(__name__)
 
 
+@dataclass
+class ObservedElement:
+    """Single detected UI element."""
+
+    label: str
+    confidence: float
+    box: Tuple[int, int, int, int]
+    text: Optional[str] = None
+
+
 def capture_screen(
     region: Tuple[int, int, int, int] | None = None,
 ) -> Optional["np.ndarray"]:
@@ -44,6 +56,20 @@ def capture_screen(
     image = pyautogui.screenshot(region=region)
     frame = cv2.cvtColor(np.array(image), cv2.COLOR_RGB2BGR)
     return frame
+
+
+def screen_stream(
+    fps: int = 1,
+    region: Tuple[int, int, int, int] | None = None,
+) -> Iterable["np.ndarray"]:
+    """Yield successive screen captures at ``fps`` frames per second."""
+    delay = 1.0 / max(fps, 1)
+    while True:
+        frame = capture_screen(region)
+        if frame is None:
+            break
+        yield frame
+        time.sleep(delay)
 
 
 def detect_gui_elements(
@@ -74,4 +100,39 @@ def extract_text(image: "np.ndarray") -> str:
     return pytesseract.image_to_string(image)
 
 
-__all__ = ["capture_screen", "detect_gui_elements", "extract_text"]
+def analyze_frame(
+    frame: "np.ndarray",
+    model_path: str | Path | None = None,
+    ocr_labels: Sequence[str] | None = None,
+) -> List[ObservedElement]:
+    """Return detected elements and optional OCR from ``frame``."""
+    elements = []
+    for label, conf, box in detect_gui_elements(frame, model_path):
+        text = None
+        if ocr_labels and label in ocr_labels:
+            x1, y1, x2, y2 = box
+            region = frame[y1:y2, x1:x2]
+            text = extract_text(region)
+        elements.append(ObservedElement(label, conf, box, text))
+    return elements
+
+
+def observe_screen(
+    fps: int = 1,
+    model_path: str | Path | None = None,
+    ocr_labels: Sequence[str] | None = None,
+) -> Iterable[List[ObservedElement]]:
+    """Yield observations for each captured frame."""
+    for frame in screen_stream(fps):
+        yield analyze_frame(frame, model_path=model_path, ocr_labels=ocr_labels)
+
+
+__all__ = [
+    "capture_screen",
+    "screen_stream",
+    "detect_gui_elements",
+    "extract_text",
+    "analyze_frame",
+    "observe_screen",
+    "ObservedElement",
+]
