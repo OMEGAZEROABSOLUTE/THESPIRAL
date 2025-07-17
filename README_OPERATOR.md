@@ -256,6 +256,20 @@ To execute the Root Chakra integration test:
 pytest tests/test_root_chakra_integration.py
 ```
 
+## Spiral RAG Pipeline
+
+Place reference documents in `sacred_inputs/` then parse and embed them:
+```bash
+python rag_parser.py --dir sacred_inputs > chunks.json
+python spiral_embedder.py --in chunks.json
+```
+The embedder writes to the Chroma database defined by `SPIRAL_VECTOR_PATH`.
+Retrieve snippets with:
+```python
+from crown_query_router import route_query
+print(route_query("meaning of spiral?", "Sage")[0]["text"])
+```
+
 
 ## Pipeline Deployment
 
