@@ -41,6 +41,12 @@ dependencies = [
     "aiortc",
     "wav2lip",
     "psutil",
+    "pyautogui",
+    "opencv-python",
+    "pytesseract",
+    "selenium",
+    "ultralytics",
+    "langchain",
 ]
 
 [project.optional-dependencies]
@@ -68,6 +74,9 @@ dev = [
     "pre-commit",
     "psutil",
 ]
+
+[project.scripts]
+os-guardian = "os_guardian.cli:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
