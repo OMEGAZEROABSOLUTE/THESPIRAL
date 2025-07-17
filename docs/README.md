@@ -33,6 +33,7 @@ The `docs` directory contains reference material for Spiral OS.
 - [psychic_loop.md](psychic_loop.md)
 - [rag_music_oracle.md](rag_music_oracle.md)
 - [rag_pipeline.md](rag_pipeline.md)
+- [scripts/ingest_sacred_inputs.sh](../scripts/ingest_sacred_inputs.sh)
 - [ritual_manifesto.md](ritual_manifesto.md)
 - [root_chakra_overview.md](root_chakra_overview.md)
 - [sonic_core_harmonics.md](sonic_core_harmonics.md)
