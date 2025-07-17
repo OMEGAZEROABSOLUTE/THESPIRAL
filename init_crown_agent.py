@@ -9,6 +9,7 @@ from pathlib import Path
 import yaml
 
 from INANNA_AI.glm_integration import GLMIntegration
+from INANNA_AI import glm_integration as gi
 import vector_memory
 from INANNA_AI import corpus_memory
 import servant_model_manager as smm
@@ -87,9 +88,12 @@ def _init_memory(cfg: dict) -> None:
 def _check_glm(integration: GLMIntegration) -> None:
     try:
         resp = integration.complete("ping")
-        logger.info("GLM test response: %s", resp)
     except Exception as exc:  # pragma: no cover - network errors
         logger.error("Failed to reach GLM endpoint: %s", exc)
+        raise RuntimeError("GLM endpoint unavailable") from exc
+    logger.info("GLM test response: %s", resp)
+    if resp == gi.SAFE_ERROR_MESSAGE:
+        raise RuntimeError("GLM endpoint returned error")
 
 
 def _register_http_servant(name: str, url: str) -> None:
@@ -131,7 +135,11 @@ def initialize_crown() -> GLMIntegration:
         os.environ.setdefault("MODEL_PATH", str(cfg["model_path"]))
     _init_memory(cfg)
     _init_servants(cfg)
-    _check_glm(integration)
+    try:
+        _check_glm(integration)
+    except RuntimeError as exc:
+        logger.error("%s", exc)
+        raise SystemExit(1)
     return integration
 
 
