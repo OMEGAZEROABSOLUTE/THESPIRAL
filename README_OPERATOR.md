@@ -455,6 +455,13 @@ learning_mutator.py --activate citrinitas_layer
 The selected layer and recent emotional analysis are stored in
 `data/emotion_state.json` for review.
 
+### Voice Aura FX
+
+`voice_aura.py` selects a reverb and delay preset for the active emotion and
+applies it with `sox` when available. If `sox` is missing the script falls back
+to `pydub`.  Optional RAVE or NSynth checkpoints can further blend the timbre
+via `dsp_engine.rave_morph` or `nsynth_interpolate`.
+
 ### Fetch Project Gutenberg texts
 
 ```bash
