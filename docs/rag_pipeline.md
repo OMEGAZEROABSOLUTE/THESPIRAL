@@ -1,10 +1,10 @@
 # Spiral RAG Pipeline
 
-The Spiral retrieval pipeline turns local documents into embeddings so queries can be answered with context. Files are placed under `sacred_inputs/` then parsed, embedded and inserted into the Chroma database.
+The Spiral retrieval pipeline turns local documents into embeddings so queries can be answered with context. Files are placed under `sacred_inputs/`, then parsed, embedded, and inserted into the Chroma database.
 
 ## Steps
 
-1. Populate `sacred_inputs/` with text, Markdown or code files. Subfolders name an archetype.
+1. Populate `sacred_inputs/` with text, Markdown or code files. Subfolders denote an archetype.
 2. Parse the directory into chunks:
    ```bash
    python rag_parser.py --dir sacred_inputs > chunks.json

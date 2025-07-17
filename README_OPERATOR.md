@@ -54,9 +54,8 @@ variables used by the tools and Docker setup:
 - `QNL_MODEL_PATH` – directory containing QNL model weights
 - `EMBED_MODEL_PATH` – optional path to the embedding model
 - `VOICE_TONE_PATH` – voice tone preset directory
-- `VECTOR_DB_PATH` – vector database location
+- `VECTOR_DB_PATH` – location of the vector store
   (defaults to `http://localhost:3001/api`)
-  documents (defaults to `spiral-os`)
 - `RETRAIN_THRESHOLD` – number of feedback items required to trigger training
 - `VOICE_CONFIG_PATH` – optional override for `voice_config.yaml`
 - `VOICE_AVATAR_CONFIG_PATH` – path to `voice_avatar_config.yaml`
