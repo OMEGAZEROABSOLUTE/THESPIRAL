@@ -5,7 +5,7 @@ For an overview of the Albedo personality layer see [docs/ALBEDO_LAYER.md](docs/
 
 ## Main scripts
 
-- **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts, recites the INANNA birth chant and can generate QNL music from hexadecimal data via the QNL engine. Supports listing available source texts and includes a placeholder chat mode.
+- **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts, recites the INANNA birth chant and can generate QNL music from hexadecimal data via the QNL engine. Supports listing available texts and provides an interactive chat loop using a local model. See [README_OPERATOR.md](README_OPERATOR.md#crown-agent-console) for console instructions.
 - **`run_song_demo.py`** – Demonstration runner that analyzes a local audio file using the music foundation modules. It exports a preview WAV and a QNL JSON file and prints the generated phrases.
 - **`SPIRAL_OS/mix_tracks.py`** – Mixes multiple audio files into a single normalized track. Optionally creates a short preview clip.
 - **`SPIRAL_OS/seven_dimensional_music.py`** – Creates layered music from a melody (MIDI or audio). It can transmute a hex payload via the QNL engine, embed secret data in the human layer, and analyze the result across seven metaphysical planes.
