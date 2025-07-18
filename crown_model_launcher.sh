@@ -5,6 +5,14 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
+mkdir -p logs
+LOG_FILE="logs/glm_service.log"
+MAIN_LOG="logs/INANNA_AI.log"
+
+log_failure() {
+    echo "$(date '+%Y-%m-%d %H:%M:%S') - glm_service exited unexpectedly" >> "$MAIN_LOG"
+}
+
 # Load secrets
 if [ -f "secrets.env" ]; then
     set -a
@@ -41,11 +49,14 @@ else
 fi
 
 if command -v docker >/dev/null 2>&1; then
-    docker run -d --rm -v "$MODEL_DIR":/model -p 8001:8000 \
+    docker run --rm -v "$MODEL_DIR":/model -p 8001:8000 \
         -e GLM_API_URL="$GLM_API_URL" -e GLM_API_KEY="$GLM_API_KEY" \
-        --name glm_service glm-service:latest
+        --name glm_service glm-service:latest \
+        >"$LOG_FILE" 2>&1 &
 else
-    python -m vllm.entrypoints.openai.api_server --model "$MODEL_DIR" --port 8001 &
-fi
+    python -m vllm.entrypoints.openai.api_server \
+        --model "$MODEL_DIR" --port 8001 \
+        >"$LOG_FILE" 2>&1 &
+fi || { log_failure; exit 1; }
 
 printf '%s\n' "$MODEL_DIR"

@@ -5,6 +5,9 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")" && pwd)"
 cd "$ROOT"
 
+mkdir -p logs
+MAIN_LOG="logs/INANNA_AI.log"
+
 if [ -f "secrets.env" ]; then
     set -a
     # shellcheck source=/dev/null
@@ -20,6 +23,7 @@ launch_model() {
     local url="$2"
     local model_dir="$3"
     local image="$4"
+    local log_file="logs/servant_${name}.log"
 
     if [ -z "$url" ]; then
         return
@@ -39,12 +43,17 @@ launch_model() {
             esac
         fi
         if command -v docker >/dev/null 2>&1; then
-            docker run -d --rm -v "$model_dir":/model -p "$port":8000 \
-                --name "${name}_service" "$image"
+            docker run --rm -v "$model_dir":/model -p "$port":8000 \
+                --name "${name}_service" "$image" \
+                >"$log_file" 2>&1 &
         else
             python -m vllm.entrypoints.openai.api_server \
-                --model "$model_dir" --port "$port" &
-        fi
+                --model "$model_dir" --port "$port" \
+                >"$log_file" 2>&1 &
+        fi || {
+            echo "$(date '+%Y-%m-%d %H:%M:%S') - ${name}_service exited unexpectedly" >> "$MAIN_LOG"
+            return 1
+        }
     fi
 }
 
