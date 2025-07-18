@@ -13,7 +13,7 @@ if [ -f "$REPO_ROOT/secrets.env" ]; then
 fi
 
 if [ "$1" = "--setup" ]; then
-    bash "$SCRIPT_DIR/setup_vast_ai.sh"
+    bash "$SCRIPT_DIR/setup_vast_ai.sh" --download
     bash "$SCRIPT_DIR/setup_glm.sh"
 fi
 
