@@ -57,6 +57,10 @@ llm = [
     "stable-baselines3",
 ]
 
+tts = [
+    "pyttsx3",
+]
+
 # Development extras mirror dev-requirements.txt
 # including testing and formatting tools
 dev = [

@@ -8,6 +8,7 @@ from typing import Dict
 import numpy as np
 
 from .utils import save_wav
+from . import fallback_tts
 from .voice_evolution import get_voice_params
 
 try:
@@ -28,15 +29,6 @@ def _get_tts() -> CoquiTTS:
     return _model
 
 
-def _sine_placeholder(text: str, style: Dict[str, float], path: Path) -> None:
-    """Fallback waveform when Coqui TTS is unavailable."""
-    duration = max(1.0, len(text) / 20)
-    sr = 22050
-    t = np.linspace(0, duration, int(sr * duration), endpoint=False)
-    freq = 220 * (1 + style.get("pitch", 0) * 0.1)
-    wave = 0.1 * np.sin(2 * np.pi * freq * t)
-    save_wav(wave.astype(np.float32), str(path), sr=sr)
-
 
 def synthesize_speech(text: str, emotion: str) -> str:
     """Generate speech from ``text`` in a style matching ``emotion``.
@@ -50,7 +42,13 @@ def synthesize_speech(text: str, emotion: str) -> str:
         tts = _get_tts()
         tts.tts_to_file(text=text, file_path=str(out_path), speed=style.get("speed", 1.0))
     else:  # pragma: no cover - optional dependency missing
-        _sine_placeholder(text, style, out_path)
+        out_path = Path(
+            fallback_tts.speak(
+                text,
+                style.get("pitch", 0.0),
+                style.get("speed", 1.0),
+            )
+        )
 
     return str(out_path)
 
