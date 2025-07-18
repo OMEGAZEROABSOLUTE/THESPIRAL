@@ -14,6 +14,7 @@ from init_crown_agent import initialize_crown
 from orchestrator import MoGEOrchestrator
 from core import context_tracker, avatar_expression_engine
 from INANNA_AI import speaking_engine
+from tools import session_logger
 import emotional_state
 
 try:
@@ -89,10 +90,14 @@ def run_repl(argv: list[str] | None = None) -> None:
                 )
                 voice_path = result.get("voice_path")
                 if voice_path:
+                    session_logger.log_audio(Path(voice_path))
                     speaking_engine.play_wav(voice_path)
+                    frames = []
                     if context_tracker.state.avatar_loaded:
-                        for _ in avatar_expression_engine.stream_avatar_audio(Path(voice_path)):
-                            pass
+                        for frame in avatar_expression_engine.stream_avatar_audio(Path(voice_path)):
+                            frames.append(frame)
+                    if frames:
+                        session_logger.log_video(frames)
                     try:
                         from INANNA_AI import speech_loopback_reflector as slr
 
