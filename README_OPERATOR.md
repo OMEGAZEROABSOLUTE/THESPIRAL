@@ -599,6 +599,12 @@ console and streaming server, and wait for both processes:
 python start_crown_console.py
 ```
 
+Stop all services and the video stream with:
+
+```bash
+scripts/stop_crown_console.sh
+```
+
 After initialization the console displays the prompt:
 
 ```
