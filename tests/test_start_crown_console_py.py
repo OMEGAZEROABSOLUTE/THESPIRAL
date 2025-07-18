@@ -17,6 +17,7 @@ def test_python_crown_console(monkeypatch):
     dummy_dotenv = types.SimpleNamespace(load_dotenv=lambda *_: None)
     monkeypatch.setitem(sys.modules, "dotenv", dummy_dotenv)
     loader.exec_module(mod)
+    monkeypatch.setattr(mod, "check_required", lambda v: None)
 
     def fake_sleep(_):
         # Simulate one loop iteration

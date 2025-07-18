@@ -13,6 +13,10 @@ if [ -f "secrets.env" ]; then
     # shellcheck source=/dev/null
     source "secrets.env"
     set +a
+    python - <<'EOF'
+import env_validation
+env_validation.check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])
+EOF
 else
     echo "secrets.env not found" >&2
     exit 1

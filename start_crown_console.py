@@ -8,6 +8,7 @@ import time
 from pathlib import Path
 
 from dotenv import load_dotenv
+from env_validation import check_required
 
 
 ROOT = Path(__file__).resolve().parent
@@ -16,6 +17,7 @@ ROOT = Path(__file__).resolve().parent
 def main() -> None:
     """Launch console and video stream then wait for exit."""
     load_dotenv(ROOT / "secrets.env")
+    check_required(["GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"])
 
     crown_proc = subprocess.Popen(["bash", str(ROOT / "start_crown_console.sh")])
     stream_proc = subprocess.Popen([sys.executable, str(ROOT / "video_stream.py")])
