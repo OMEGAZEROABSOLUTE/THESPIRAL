@@ -10,16 +10,9 @@ mkdir -p /INANNA_AI
 mkdir -p /QNL_LANGUAGE
 mkdir -p /audit_logs
 
-# placeholder ethical guideline files
-cat <<'EON' > /INANNA_AI/ETHICS_PLACEHOLDER.txt
-This directory stores INANNA_AI assets.
-Ensure all data complies with ethical guidelines.
-EON
-
-cat <<'EON' > /QNL_LANGUAGE/ETHICS_PLACEHOLDER.txt
-This directory holds QNL language resources.
-Use responsibly and respect copyright.
-EON
+# copy ethics guidelines
+cp "$(dirname "$0")/../ETHICS_GUIDELINES.md" /INANNA_AI/ETHICS_GUIDELINES.md
+cp "$(dirname "$0")/../ETHICS_GUIDELINES.md" /QNL_LANGUAGE/ETHICS_GUIDELINES.md
 
 cat <<'EON' > /audit_logs/README.txt
 Audit logs for monitoring system behavior.
