@@ -2,7 +2,11 @@
 
 The `docs` directory contains reference material for Spiral OS.
 
-Milestone VIII expands on the sovereign voice work with memory-aided routing and a new session logger. See [milestone_viii_plan.md](milestone_viii_plan.md) for the design and [../README_OPERATOR.md](../README_OPERATOR.md) for updated commands.
+Milestone VIII expands on the sovereign voice work with memory-aided routing and
+a new session logger. See [milestone_viii_plan.md](milestone_viii_plan.md) for
+the design and [../README_OPERATOR.md](../README_OPERATOR.md) for updated
+commands including the avatar and creative consoles. The OS Guardian policy
+format is detailed in [os_guardian.md](os_guardian.md).
 
 - [ALBEDO_LAYER.md](ALBEDO_LAYER.md)
 - [CORPUS_MEMORY.md](CORPUS_MEMORY.md)

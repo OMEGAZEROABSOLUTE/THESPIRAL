@@ -545,6 +545,8 @@ scripts/run_ritual_training.sh &
 ```
 
 The script saves the process ID to `ritual_training.pid`.
+`auto_retrain.py` can also be scheduled via `cron` to fine-tune the model
+whenever `data/feedback.json` exceeds the `RETRAIN_THRESHOLD` value.
 
 ## Verify core integrity
 
@@ -644,6 +646,15 @@ frames. For guidance on customizing the avatar textures edit
 `guides/avatar_config.toml` as described in
 [`docs/avatar_pipeline.md`](docs/avatar_pipeline.md).
 
+Within the console you can adjust the system state with a few slash commands:
+
+```
+/emotion joy      # update the current emotion label
+/avatar dreamer   # switch to a different avatar style
+/reload           # reload the Crown agent
+```
+
+
 ## HTTP Interface
 
 `server.py` exposes a small FastAPI application with a `/glm-command` endpoint.
@@ -680,6 +691,11 @@ container script:
 pip install .[dev]
 bash scripts/setup_os_guardian.sh
 ```
+
+Set ``OG_POLICY`` to ``allow``, ``ask`` or ``deny`` and point ``OG_POLICY_FILE``
+at a YAML file defining ``allowed_commands``, ``allowed_apps`` and rate limits.
+``OG_ALLOWED_COMMANDS``, ``OG_ALLOWED_APPS`` and ``OG_ALLOWED_DOMAINS`` may also
+be provided directly. See ``docs/os_guardian_permissions.md`` for details.
 
 Once inside the container the ``os-guardian`` command exposes basic tools:
 
