@@ -12,7 +12,7 @@ import librosa
 
 from .utils import save_wav, load_audio, sentiment_score
 from .voice_evolution import get_voice_params, update_voice_from_history
-from . import tts_coqui, tts_tortoise, tts_bark, tts_xtts
+from . import tts_coqui, tts_tortoise, tts_bark, tts_xtts, fallback_tts
 from .emotion_analysis import emotion_to_archetype
 from tools import voice_conversion
 
@@ -32,15 +32,6 @@ except Exception:  # pragma: no cover - optional dependency
     sd = None
 
 logger = logging.getLogger(__name__)
-
-
-def _sine_placeholder(text: str) -> Tuple[np.ndarray, int]:
-    """Return a simple sine wave when gTTS is unavailable."""
-    duration = max(1.0, len(text) / 20)
-    sr = 22050
-    t = np.linspace(0, duration, int(sr * duration), endpoint=False)
-    wave = 0.1 * np.sin(2 * np.pi * 220 * t)
-    return wave.astype(np.float32), sr
 
 
 def convert_voice(wave: np.ndarray, sr: int, timbre: str) -> np.ndarray:
@@ -89,7 +80,10 @@ def _synthesize_gtts(
     out_path = Path(tempfile.gettempdir()) / f"gtts_{abs(hash(text))}.wav"
 
     if gTTS is None:
-        wave, sr = _sine_placeholder(f"{archetype} {text}")
+        fallback_path = fallback_tts.speak(
+            f"{archetype} {text}", style.get("pitch", 0.0), style.get("speed", 1.0)
+        )
+        wave, sr = load_audio(fallback_path, sr=None, mono=True)
     else:
         try:
             mp3_a = out_path.with_suffix(".arch.mp3")
@@ -106,7 +100,10 @@ def _synthesize_gtts(
             wave = np.concatenate([wave_a, pause, wave_b])
         except Exception as exc:  # pragma: no cover - external call may fail
             logger.warning("gTTS synthesis failed: %s", exc)
-            wave, sr = _sine_placeholder(f"{archetype} {text}")
+            fallback_path = fallback_tts.speak(
+                f"{archetype} {text}", style.get("pitch", 0.0), style.get("speed", 1.0)
+            )
+            wave, sr = load_audio(fallback_path, sr=None, mono=True)
 
     wave = _apply_style(wave, sr, style)
     wave = convert_voice(wave, sr, timbre)

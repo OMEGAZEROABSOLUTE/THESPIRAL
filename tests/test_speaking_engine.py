@@ -79,3 +79,29 @@ def test_emotion_modifies_style(tmp_path, monkeypatch):
     path = speaking_engine.synthesize_speech("hi", "joy")
     assert Path(path).exists()
     assert captured["params"] == style
+
+
+def test_fallback_tts_invoked_when_gtts_missing(tmp_path, monkeypatch):
+    events = {}
+
+    def fake_speak(text: str, pitch: float, speed: float) -> str:
+        events["args"] = (text, pitch, speed)
+        out = tmp_path / "fb.wav"
+        out.write_bytes(b"x")
+        return str(out)
+
+    monkeypatch.setattr(speaking_engine, "gTTS", None)
+    monkeypatch.setattr(
+        speaking_engine, "fallback_tts", types.SimpleNamespace(speak=fake_speak)
+    )
+    monkeypatch.setattr(speaking_engine, "emotion_to_archetype", lambda e: "Hero")
+    style = {"speed": 1.1, "pitch": 0.2}
+    monkeypatch.setattr(speaking_engine, "get_voice_params", lambda e: style)
+    monkeypatch.setattr(speaking_engine.tempfile, "gettempdir", lambda: str(tmp_path))
+    monkeypatch.setattr(speaking_engine.librosa, "load", lambda *a, **k: (np.zeros(22050), 22050))
+    monkeypatch.setattr(speaking_engine, "_apply_style", lambda w, sr, s: w)
+    monkeypatch.setattr(speaking_engine, "convert_voice", lambda w, sr, t: w)
+
+    path = speaking_engine.synthesize_speech("hi", "joy")
+    assert events["args"] == ("Hero hi", 0.2, 1.1)
+    assert Path(path).exists()

@@ -15,6 +15,13 @@ Install Spiral OS along with the development dependencies:
 pip install .[dev]
 ```
 
+Install the optional `[tts]` extras to enable the fallback speech engine powered
+by ``pyttsx3``:
+
+```bash
+pip install .[dev,tts]
+```
+
 Alternatively run the helper script which installs the packages from
 `dev-requirements.txt`:
 
@@ -160,7 +167,7 @@ these steps to place the model under `INANNA_AI/models`.
 1. Install the dependencies using the optional development extras:
 
    ```bash
-   pip install .[dev]
+   pip install .[dev,tts]
    ```
 
 2. Copy the example secrets file to the project root:
