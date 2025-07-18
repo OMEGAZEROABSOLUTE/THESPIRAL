@@ -348,10 +348,16 @@ class MoGEOrchestrator:
             action = intent.get("action")
             if action == "show_avatar":
                 context_tracker.state.avatar_loaded = True
+                emotion = emotional_state.get_last_emotion() or "neutral"
+                opts = crown_decider.decide_expression_options(emotion)
                 log_interaction(
                     text,
                     {"action": "show_avatar"},
-                    {"message": "avatar displayed"},
+                    {
+                        "message": "avatar displayed",
+                        "avatar_style": opts.get("avatar_style"),
+                        "aura_amount": opts.get("aura_amount"),
+                    },
                     "ok",
                 )
             if action == "start_call":
