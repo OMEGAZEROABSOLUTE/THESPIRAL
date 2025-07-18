@@ -27,7 +27,7 @@ except Exception:  # pragma: no cover - optional dependency
     Document = None  # type: ignore
     FAISS = None  # type: ignore
 
-from . import action_engine, perception
+from . import action_engine, perception, safety
 
 logger = logging.getLogger(__name__)
 
@@ -85,6 +85,7 @@ class GuardianPlanner:
     llm: ChatOpenAI | None = None
 
     def __post_init__(self) -> None:  # pragma: no cover - init
+        safety.load_policy()
         if self.llm is None and ChatOpenAI is not None:
             self.llm = ChatOpenAI(temperature=0)
         self.memory = _load_memory(self.memory_path)
@@ -140,3 +141,4 @@ def plan(command: str) -> List[str]:
 
 
 __all__ = ["plan", "GuardianPlanner"]
+
