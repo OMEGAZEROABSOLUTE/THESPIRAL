@@ -64,6 +64,27 @@ def run_repl(argv: list[str] | None = None) -> None:
             if command == "/memory":
                 _show_memory()
                 continue
+            if command.startswith("/emotion"):
+                parts = command.split(maxsplit=1)
+                if len(parts) == 2:
+                    emotional_state.set_last_emotion(parts[1])
+                    print(f"Emotion set to {parts[1]}")
+                else:
+                    print("Usage: /emotion <label>")
+                continue
+            if command.startswith("/avatar"):
+                parts = command.split(maxsplit=1)
+                if len(parts) == 2:
+                    context_tracker.state.avatar_style = parts[1]
+                    print(f"Avatar style set to {parts[1]}")
+                    try:
+                        for _ in avatar_expression_engine.stream_avatar_audio(Path("preview.wav")):
+                            break
+                    except Exception:
+                        logger.exception("avatar preview failed")
+                else:
+                    print("Usage: /avatar <style>")
+                continue
             print(f"Unknown command: {command}")
             continue
 
