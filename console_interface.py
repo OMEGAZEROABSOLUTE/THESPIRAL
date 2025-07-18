@@ -11,6 +11,9 @@ from prompt_toolkit.history import FileHistory
 from prompt_toolkit.patch_stdout import patch_stdout
 
 from init_crown_agent import initialize_crown
+from orchestrator import MoGEOrchestrator
+from core import context_tracker, avatar_expression_engine
+from INANNA_AI import speaking_engine
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -33,11 +36,8 @@ def run_repl(argv: list[str] | None = None) -> None:
     args = parser.parse_args(argv)
 
     glm = initialize_crown()
-    speaker = None
-    if args.speak:
-        from INANNA_AI import speaking_engine
-
-        speaker = speaking_engine.SpeakingEngine()
+    orch = MoGEOrchestrator()
+    speak = args.speak
     session = PromptSession(history=FileHistory(str(HISTORY_FILE)))
     print("Crown console started. Type /exit to quit.")
 
@@ -75,18 +75,29 @@ def run_repl(argv: list[str] | None = None) -> None:
             print("Error: could not process input")
             continue
         print(reply)
-        if speaker is not None:
-            text_reply = reply.get("text", str(reply)) if isinstance(reply, dict) else str(reply)
-            emotion = reply.get("emotion", "neutral") if isinstance(reply, dict) else "neutral"
+        if speak and isinstance(reply, dict):
+            text_reply = reply.get("text", str(reply))
+            emotion = reply.get("emotion", "neutral")
             try:
-                path = speaker.synthesize(text_reply, emotion)
-                speaker.play(path)
-                try:
-                    from INANNA_AI import speech_loopback_reflector as slr
+                result = orch.route(
+                    text_reply,
+                    {"emotion": emotion},
+                    text_modality=False,
+                    voice_modality=True,
+                    music_modality=False,
+                )
+                voice_path = result.get("voice_path")
+                if voice_path:
+                    speaking_engine.play_wav(voice_path)
+                    if context_tracker.state.avatar_loaded:
+                        for _ in avatar_expression_engine.stream_avatar_audio(Path(voice_path)):
+                            pass
+                    try:
+                        from INANNA_AI import speech_loopback_reflector as slr
 
-                    slr.reflect(path)
-                except Exception:  # pragma: no cover - optional deps
-                    logger.exception("speech reflection failed")
+                        slr.reflect(voice_path)
+                    except Exception:  # pragma: no cover - optional deps
+                        logger.exception("speech reflection failed")
             except Exception:  # pragma: no cover - synthesis may fail
                 logger.exception("speaking failed")
 

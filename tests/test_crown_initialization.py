@@ -7,6 +7,73 @@ sys.path.insert(0, str(ROOT))
 
 import logging
 import types
+
+yaml_mod = types.ModuleType("yaml")
+yaml_mod.safe_load = lambda *a, **k: {}
+sys.modules.setdefault("yaml", yaml_mod)
+
+dummy_np = types.ModuleType("numpy")
+dummy_np.ndarray = object
+dummy_np.zeros = lambda *a, **k: None
+dummy_np.pi = 3.14159
+dummy_np.float32 = float
+sys.modules.setdefault("numpy", dummy_np)
+
+ptk_mod = types.ModuleType("prompt_toolkit")
+ptk_mod.PromptSession = lambda *a, **k: None
+sys.modules.setdefault("prompt_toolkit", ptk_mod)
+ptk_hist = types.ModuleType("prompt_toolkit.history")
+ptk_hist.FileHistory = lambda *a, **k: None
+sys.modules.setdefault("prompt_toolkit.history", ptk_hist)
+ptk_patch = types.ModuleType("prompt_toolkit.patch_stdout")
+ptk_patch.patch_stdout = lambda: None
+sys.modules.setdefault("prompt_toolkit.patch_stdout", ptk_patch)
+
+sf_mod = types.ModuleType("soundfile")
+sf_mod.write = lambda *a, **k: None
+sf_mod.read = lambda *a, **k: (b"", 22050)
+sys.modules.setdefault("soundfile", sf_mod)
+
+librosa_mod = types.ModuleType("librosa")
+librosa_mod.load = lambda *a, **k: ([], 22050)
+librosa_mod.resample = lambda *a, **k: []
+librosa_mod.effects = types.SimpleNamespace(pitch_shift=lambda *a, **k: [], time_stretch=lambda *a, **k: [])
+sys.modules.setdefault("librosa", librosa_mod)
+
+opensmile_mod = types.ModuleType("opensmile")
+sys.modules.setdefault("opensmile", opensmile_mod)
+
+scipy_mod = types.ModuleType("scipy")
+scipy_io_mod = types.ModuleType("scipy.io")
+sys.modules.setdefault("scipy", scipy_mod)
+sys.modules.setdefault("scipy.io", scipy_io_mod)
+scipy_wavfile_mod = types.ModuleType("scipy.io.wavfile")
+scipy_wavfile_mod.write = lambda *a, **k: None
+sys.modules.setdefault("scipy.io.wavfile", scipy_wavfile_mod)
+
+sys.modules.setdefault("SPIRAL_OS.qnl_engine", types.ModuleType("SPIRAL_OS.qnl_engine"))
+sys.modules.setdefault("SPIRAL_OS.symbolic_parser", types.ModuleType("SPIRAL_OS.symbolic_parser"))
+
+stable_mod = types.ModuleType("stable_baselines3")
+class DummyPPO:
+    def __init__(self, *a, **k):
+        pass
+stable_mod.PPO = DummyPPO
+sys.modules.setdefault("stable_baselines3", stable_mod)
+
+gym_mod = types.ModuleType("gymnasium")
+gym_mod.Env = object
+spaces_mod = types.ModuleType("spaces")
+class DummyBox:
+    def __init__(self, *a, **k):
+        pass
+spaces_mod.Box = DummyBox
+gym_mod.spaces = spaces_mod
+sys.modules.setdefault("gymnasium", gym_mod)
+
+yaml_mod = types.ModuleType("yaml")
+yaml_mod.safe_load = lambda *a, **k: {}
+sys.modules.setdefault("yaml", yaml_mod)
 import pytest
 import init_crown_agent
 import console_interface
@@ -127,9 +194,13 @@ def test_console_speak(monkeypatch, capsys):
     monkeypatch.setattr(console_interface, "PromptSession", lambda history=None: DummySession(["hello", "/exit"]))
     monkeypatch.setattr(console_interface, "patch_stdout", lambda: DummyContext())
 
-    dummy_speaker = types.SimpleNamespace(synthesize=lambda t, e: "out.wav", play=lambda p: calls.setdefault("play", p))
+    dummy_orch = types.SimpleNamespace(route=lambda *a, **k: {"voice_path": "out.wav"})
     dummy_reflector = types.SimpleNamespace(reflect=lambda p: calls.setdefault("reflect", p))
-    monkeypatch.setitem(sys.modules, "INANNA_AI.speaking_engine", types.SimpleNamespace(SpeakingEngine=lambda: dummy_speaker))
+    dummy_stream = types.SimpleNamespace(stream_avatar_audio=lambda p: iter(()))
+
+    monkeypatch.setattr(console_interface, "MoGEOrchestrator", lambda: dummy_orch)
+    monkeypatch.setattr(console_interface, "speaking_engine", types.SimpleNamespace(play_wav=lambda p: calls.setdefault("play", p)))
+    monkeypatch.setitem(sys.modules, "core.avatar_expression_engine", dummy_stream)
     monkeypatch.setitem(sys.modules, "INANNA_AI.speech_loopback_reflector", dummy_reflector)
 
     console_interface.run_repl(["--speak"])
