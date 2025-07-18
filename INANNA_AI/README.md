@@ -9,7 +9,9 @@ This package provides a lightweight set of utilities for building a voice interf
 - `stt_whisper.py` – Thin wrapper around OpenAI Whisper that downloads and runs the speech‑to‑text model.
 - `emotion_analysis.py` – Estimates a rough emotional label (joy, stress, fear and others) using Librosa pitch, tempo and energy analysis.
 - `voice_evolution.py` – Manages parameters that control speaking style and can adapt them over time.
-- `tts_coqui.py` – Generates speech using Coqui TTS.  When the library is not available it synthesizes a simple sine wave placeholder.
+- `tts_coqui.py` – Generates speech using Coqui TTS. When the library is not
+  available it falls back to `fallback_tts.speak`, which depends on the
+  `pyttsx3` package.
 - `db_storage.py` – Stores transcripts and generated responses in a SQLite database for later inspection.
 - `listening_engine.py` – Streams microphone audio and extracts real-time emotion and environment states.
 - `response_manager.py` – Chooses a Surface/Deep/Umbra/Albedo reply by
