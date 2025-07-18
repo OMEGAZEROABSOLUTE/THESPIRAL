@@ -1,4 +1,4 @@
-"""Analyze Python modules using a placeholder GLM endpoint."""
+"""Analyze Python modules using the GLM endpoint from ``GLM_API_URL``."""
 from __future__ import annotations
 
 import logging
