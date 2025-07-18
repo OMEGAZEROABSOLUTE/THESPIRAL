@@ -1,8 +1,10 @@
 # Vast.ai Deployment
 
 This guide explains how to run the SPIRAL_OS tools on a Vast.ai server.
-
 See [deployment_overview.md](deployment_overview.md) for a quick summary.
+
+Before you begin run `scripts/check_prereqs.sh` to ensure Docker, `nc`, `sox` and
+`ffmpeg` are available. The script exits with an error if any command is missing.
 
 ## Select a PyTorch template
 
@@ -12,47 +14,21 @@ See [deployment_overview.md](deployment_overview.md) for a quick summary.
 
 ## Clone the repository and install requirements
 
-After connecting to the server run:
+After connecting to the server, run the commands below. Replace `your-user` with
+your GitHub name.
 
 ```bash
-# clone the project
 git clone https://github.com/your-user/SPIRAL_OS.git
 cd SPIRAL_OS
-
-# install Python packages
-pip install -r requirements.txt
-```
-
-Optionally install the development requirements with:
-
-```bash
-pip install -r dev-requirements.txt
-```
-
-## GPU setup and model downloads (optional)
-
-If your instance provides a GPU you can pull model weights. The helper script
-below creates directories and fetches models for you:
-
-```bash
-bash scripts/setup_vast_ai.sh
-```
-
-The script installs dependencies, prepares the `INANNA_AI/models` folder and can
-invoke `download_models.py` to pull large checkpoints. Edit the script to suit
-your needs.
-
-## Initialize GLM environment
-
-Run the setup script to install Python packages and create core directories under `/`:
-
-```bash
+bash scripts/setup_vast_ai.sh --download
 bash scripts/setup_glm.sh
 ```
 
-It prepares `/INANNA_AI`, `/QNL_LANGUAGE` and `/audit_logs`. The script copies
-`ETHICS_GUIDELINES.md` into the first two directories so the guidelines are
-always available on the server.
+The `setup_vast_ai.sh` script installs dependencies and downloads common models.
+`setup_glm.sh` prepares `/INANNA_AI`, `/QNL_LANGUAGE` and `/audit_logs`.
+Development tools can be installed with `bash scripts/setup_dev.sh` if desired.
+
+
 
 ## Clone a private repository
 
@@ -66,28 +42,39 @@ The script clones the repository to `/INANNA_AI/repo` and writes `confirmation.t
 
 ## Start the services
 
-Create a `secrets.env` file or copy the example and fill in the API keys:
+1. Copy the example file and provide the required API keys:
 
-```bash
-cp secrets.env.example secrets.env
-# edit secrets.env
-```
+   ```bash
+   cp secrets.env.example secrets.env
+   # edit secrets.env
+   ```
 
-Launch the stack with the helper script. Pass `--setup` on the first run to prepare directories:
+2. Boot the stack. The first run should include `--setup`:
 
-```bash
-bash scripts/vast_start.sh --setup
-```
+   ```bash
+   bash scripts/vast_start.sh --setup
+   ```
 
-The script reads `secrets.env`, runs the setup scripts when `--setup` is supplied and then executes `docker-compose up` for the `INANNA_AI` service. It waits for port `8000` and then calls `python -m webbrowser` to open `web_console/index.html` so you can issue commands.
+   The script loads `secrets.env`, installs missing components and waits for
+   port `8000` before opening the web console.
 
-After the first setup you can start or restart the services by running the script without any arguments:
+3. Subsequent restarts are simplified:
 
-```bash
-bash scripts/vast_start.sh
-```
+   ```bash
+   bash scripts/vast_start.sh
+   ```
 
-It tails the container logs so you can monitor the startup process. When the server becomes ready the browser window automatically loads the web console, which streams audio and video via WebRTC.
+4. Verify that the API responds correctly:
+
+   ```bash
+   python scripts/vast_check.py http://localhost:8000
+   ```
+
+   For a broader check across all configured models run
+   `bash scripts/check_services.sh`.
+
+To update the environment and restart the containers later use
+`bash scripts/update_and_restart.sh`.
 
 ## View system metrics
 
