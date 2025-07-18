@@ -1,4 +1,4 @@
-"""Summarize project purpose using a placeholder GLM endpoint."""
+"""Summarize project purpose using the GLM endpoint configured via ``GLM_API_URL``."""
 from __future__ import annotations
 
 import logging

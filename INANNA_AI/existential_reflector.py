@@ -1,4 +1,4 @@
-"""Generate a short self-description using a placeholder GLM endpoint."""
+"""Generate a short self-description using the GLM endpoint from ``GLM_API_URL``."""
 from __future__ import annotations
 
 import logging
