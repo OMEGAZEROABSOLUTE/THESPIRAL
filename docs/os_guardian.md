@@ -35,3 +35,17 @@ domain_limits:
 Set ``OG_POLICY_FILE=/path/to/policy.yaml`` before launching the tools so the
 safety module can enforce these limits.
 
+## Environment variables
+
+The safety layer also reads the following variables:
+
+- ``OG_POLICY`` – default permission mode: ``allow``, ``ask`` or ``deny``.
+- ``OG_ALLOWED_COMMANDS`` – colon‑separated list of shell commands that may run.
+- ``OG_ALLOWED_APPS`` – colon‑separated list of application paths.
+- ``OG_ALLOWED_DOMAINS`` – colon‑separated list of domains permitted in
+  ``open_url``.
+
+These overrides are merged with any values found in the policy file.
+See [os_guardian_permissions.md](os_guardian_permissions.md) for a full
+explanation of the safety framework.
+
