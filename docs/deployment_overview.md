@@ -25,21 +25,41 @@ Models are stored under `INANNA_AI/models`.
 
 ## Launch on Vast.ai
 
-Use `scripts/vast_start.sh` to spin up Spiral OS on a Vast.ai rental. On the first run pass `--setup` so the helper scripts prepare the environment and pull models:
+Follow the steps below to start Spiral OS on a Vast.ai instance.
 
-```bash
-bash scripts/vast_start.sh --setup
-```
+1. Optionally verify that Docker and other tools are available:
 
-The script loads `secrets.env`, runs `docker-compose up` for the `INANNA_AI` service, waits for port `8000` and then opens `web_console/index.html` in your browser. Subsequent runs can omit `--setup`.
+   ```bash
+   bash scripts/check_prereqs.sh
+   ```
 
-Once running you can verify that the API endpoints respond correctly with the checker script:
+2. Boot the stack for the first time. The `--setup` flag installs packages
+   and downloads any configured models:
 
-```bash
-python scripts/vast_check.py http://localhost:8000
-```
+   ```bash
+   bash scripts/vast_start.sh --setup
+   ```
 
-The checker polls `/health` and `/ready` and performs a dummy `/offer` exchange. It exits with a non‑zero status if any step fails.
+   The script reads `secrets.env`, brings up the `INANNA_AI` container and
+   waits for port `8000` before opening `web_console/index.html` in your
+   browser.
+
+3. Subsequent restarts require only:
+
+   ```bash
+   bash scripts/vast_start.sh
+   ```
+
+4. Check that the API endpoints respond correctly:
+
+   ```bash
+   python scripts/vast_check.py http://localhost:8000
+   ```
+
+   The checker polls `/health` and `/ready` and performs a dummy `/offer`
+   exchange. It exits with a non‑zero status if any step fails.
+
+To update the repository in place run `bash scripts/update_and_restart.sh`.
 
 ## Local Docker Compose
 
