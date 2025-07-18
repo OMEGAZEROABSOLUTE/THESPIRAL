@@ -16,11 +16,12 @@ The **Albedo** layer introduces a stateful persona that drives responses through
 `GLMIntegration` reads the endpoint and API key from environment variables by default.  Override them when instantiating the class or set `GLM_API_URL` and `GLM_API_KEY`:
 
 ```python
+import os
 from INANNA_AI.glm_integration import GLMIntegration
 
 glm = GLMIntegration(
-    endpoint="https://api.example.com/glm41v_9b",
-    api_key="<your key>",
+    endpoint=os.getenv("GLM_API_URL", "http://localhost:8001"),
+    api_key=os.getenv("GLM_API_KEY"),
 )
 ```
 
@@ -33,8 +34,8 @@ When no arguments are provided the class falls back to the `GLM_API_URL` and
 To engage the Albedo personality, create the layer and pass it to the orchestrator. The `INANNA_AI.main` script records microphone input and routes it through this layer:
 
 ```bash
+export GLM_API_URL=http://localhost:8001
 export GLM_API_KEY=<your key>
-export GLM_API_URL=https://api.example.com/glm41v_9b
 python -m INANNA_AI.main --duration 3 --personality albedo
 ```
 
