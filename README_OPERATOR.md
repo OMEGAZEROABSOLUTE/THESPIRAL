@@ -585,6 +585,11 @@ start the servant models without relaunching the main GLM service.
 ./launch_servants.sh
 ```
 
+Log output is written under the `logs` directory. The GLM service
+saves to `logs/glm_service.log` while each servant writes to
+`logs/servant_<name>.log`. Any unexpected process termination is noted
+in `logs/INANNA_AI.log`.
+
 Use `start_crown_console.sh` to launch these services. The script first
 invokes `scripts/check_prereqs.sh` to verify that Docker, `nc`, `sox` and
 `ffmpeg` are available, then automatically opens the interactive console once
