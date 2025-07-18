@@ -29,6 +29,7 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
                 calls.append("nc -z localhost 8000")
             else:
                 calls.append("python socket_check")
+            calls.append("scripts/check_services.sh")
             calls.append("python console_interface.py")
         return subprocess.CompletedProcess(cmd, 0, "", "")
 
@@ -50,4 +51,5 @@ def test_start_avatar_console_waits_and_fallback(monkeypatch):
     assert wait_idx > calls.index("start_crown_console")
     assert wait_idx > calls.index("python video_stream.py")
     assert "python socket_check" in calls
+    assert "scripts/check_services.sh" in calls
 

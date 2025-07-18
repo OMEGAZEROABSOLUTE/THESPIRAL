@@ -69,4 +69,6 @@ for url in "${DEEPSEEK_URL:-}" "${MISTRAL_URL:-}" "${KIMI_K2_URL:-}"; do
     fi
 done
 
+./scripts/check_services.sh
+
 python console_interface.py
