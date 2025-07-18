@@ -56,6 +56,25 @@ def test_crown_console_startup(monkeypatch):
     assert servants_idx < port_idx < check_idx < console_idx
 
 
+def test_crown_console_missing_env(monkeypatch):
+    def fake_run(cmd, *args, **kwargs):
+        if cmd[0] == "bash" and str(cmd[1]).endswith("start_crown_console.sh"):
+            for var in ("GLM_API_URL", "GLM_API_KEY", "HF_TOKEN"):
+                if not os.getenv(var):
+                    return subprocess.CompletedProcess(cmd, 1, "", "")
+            return subprocess.CompletedProcess(cmd, 0, "", "")
+        return subprocess.CompletedProcess(cmd, 0, "", "")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    monkeypatch.delenv("GLM_API_URL", raising=False)
+    monkeypatch.setenv("GLM_API_KEY", "k")
+    monkeypatch.setenv("HF_TOKEN", "t")
+
+    result = subprocess.run(["bash", str(ROOT / "start_crown_console.sh")])
+
+    assert result.returncode != 0
+
+
 def test_crown_console_dead_glm(monkeypatch, tmp_path):
     monkeypatch.syspath_prepend(str(ROOT))
 
