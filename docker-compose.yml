@@ -39,3 +39,12 @@ services:
     volumes:
       - ./INANNA_AI/models/Kimi-K2:/model
     restart: unless-stopped
+
+  monitor:
+    build: .
+    command: python system_monitor.py --serve --port 8000
+    ports:
+      - "9100:8000"
+    restart: unless-stopped
+    profiles:
+      - monitor

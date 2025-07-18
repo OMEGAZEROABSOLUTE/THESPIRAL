@@ -19,6 +19,9 @@ def test_collect_stats(monkeypatch):
     monkeypatch.setattr(system_monitor.psutil, "cpu_percent", lambda interval=None: 25.0)
     monkeypatch.setattr(system_monitor.psutil, "virtual_memory", lambda: Mem)
     monkeypatch.setattr(system_monitor.psutil, "net_io_counters", lambda: Net)
+    monkeypatch.setattr(
+        system_monitor, "_get_gpu_stats", lambda: [{"utilization": 90, "memory_total": 10, "memory_used": 5}]
+    )
 
     stats = system_monitor.collect_stats()
     assert stats == {
@@ -26,6 +29,7 @@ def test_collect_stats(monkeypatch):
         "memory_percent": 50.0,
         "bytes_sent": 100,
         "bytes_recv": 200,
+        "gpus": [{"utilization": 90, "memory_total": 10, "memory_used": 5}],
     }
 
 
