@@ -91,7 +91,19 @@ Establezca en `secrets.env` las URLs de cada servicio con la IP pública de la
 instancia, por ejemplo `GLM_API_URL=http://<ip>:8001`. Ajuste de igual forma
 `DEEPSEEK_URL`, `MISTRAL_URL` y `KIMI_K2_URL` si están activos.
 
+### Actualizar y reiniciar contenedores
+
+Para actualizar el servidor ejecuta:
+
+```bash
+bash scripts/update_and_restart.sh
+```
+
+Este script realiza `git pull`, instala las dependencias de `requirements.txt` y reinicia los contenedores definidos en `docker-compose.yml`.
+
+
 ## Script overview
+
 
 - **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts and can recite the INANNA birth chant or feed hex data into the QNL engine. Use `--list` to show available texts.
 - **`INANNA_AI/main.py`** – Voice loop controller with optional personalities. Includes `fetch-gutenberg` and `fetch-github` subcommands to collect learning data.
