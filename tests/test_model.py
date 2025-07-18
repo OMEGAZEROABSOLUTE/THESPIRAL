@@ -5,6 +5,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
 from INANNA_AI_AGENT import model  # type: ignore
+import pytest
 
 from transformers import GPT2Config, GPT2LMHeadModel, PreTrainedTokenizerFast
 from tokenizers import Tokenizer
@@ -37,3 +38,8 @@ def test_load_model_returns_objects(tmp_path):
     mdl, tok = model.load_model(tmp_path)
     assert mdl is not None
     assert tok is not None
+
+
+def test_load_model_missing_weights(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        model.load_model(tmp_path)

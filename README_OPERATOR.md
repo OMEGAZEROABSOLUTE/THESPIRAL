@@ -146,6 +146,7 @@ background tasks.
    The `run_inanna.sh` helper script reads this file when starting the chat
    agent.
 2. Run `python download_models.py deepseek` to fetch the DeepSeek-R1 model.
+   This download **must** complete before the chat agent can run.
 3. Start chat via `python INANNA_AI_AGENT/inanna_ai.py chat` or `./run_inanna.sh`.
    To load a different model directory pass `--model-dir <path>` to either command,
    for example `./run_inanna.sh --model-dir INANNA_AI/models/gemma2`.
@@ -161,8 +162,10 @@ background tasks.
 
 ## Download Models
 
-The INANNA chat agent requires the DeepSeek-R1 weights from Hugging Face. Follow
-these steps to place the model under `INANNA_AI/models`.
+The INANNA chat agent requires the DeepSeek-R1 weights from Hugging Face.
+Download them **before** running the chat command or the loader will raise a
+`FileNotFoundError`. Follow these steps to place the model under
+`INANNA_AI/models`.
 
 1. Install the dependencies using the optional development extras:
 

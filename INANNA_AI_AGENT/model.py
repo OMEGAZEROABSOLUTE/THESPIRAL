@@ -3,7 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Tuple
 
-from transformers import AutoConfig, AutoModelForCausalLM, AutoTokenizer
+from transformers import AutoModelForCausalLM, AutoTokenizer
 
 
 def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
@@ -22,18 +22,14 @@ def load_model(model_dir: str | Path) -> Tuple[object, AutoTokenizer]:
     model_dir = Path(model_dir)
     tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
     try:
-        model = AutoModelForCausalLM.from_pretrained(model_dir, local_files_only=True)
-    except Exception:
-        config = AutoConfig.from_pretrained(model_dir, local_files_only=True)
-
-        class DummyModel:
-            def __init__(self, cfg):
-                self.config = cfg
-
-            def generate(self, **kwargs):  # pragma: no cover - placeholder
-                return [[0]]
-
-        model = DummyModel(config)
+        model = AutoModelForCausalLM.from_pretrained(
+            model_dir, local_files_only=True
+        )
+    except Exception as exc:
+        raise FileNotFoundError(
+            f"Model weights not found in {model_dir}. "
+            "Run download_models.py to fetch them."
+        ) from exc
     return model, tokenizer
 
 
