@@ -14,6 +14,7 @@ from init_crown_agent import initialize_crown
 from orchestrator import MoGEOrchestrator
 from core import context_tracker, avatar_expression_engine
 from INANNA_AI import speaking_engine
+import emotional_state
 
 try:
     from crown_prompt_orchestrator import crown_prompt_orchestrator
@@ -95,7 +96,9 @@ def run_repl(argv: list[str] | None = None) -> None:
                     try:
                         from INANNA_AI import speech_loopback_reflector as slr
 
-                        slr.reflect(voice_path)
+                        info = slr.reflect(voice_path)
+                        emotional_state.set_last_emotion(info.get("emotion"))
+                        # Reflection informs emotional tone for next reply
                     except Exception:  # pragma: no cover - optional deps
                         logger.exception("speech reflection failed")
             except Exception:  # pragma: no cover - synthesis may fail
