@@ -144,7 +144,13 @@ background tasks.
    for example `./run_inanna.sh --model-dir INANNA_AI/models/gemma2`.
 4. Optionally configure `GLMIntegration` with your GLM endpoint and API key.  If
    no values are provided the class reads `GLM_API_URL` and `GLM_API_KEY` from
-   the environment and defaults to `https://api.example.com/glm41v_9b`.
+   the environment and defaults to `http://localhost:8001`.
+   Set them explicitly before starting chat:
+
+   ```bash
+   export GLM_API_URL=http://localhost:8001
+   export GLM_API_KEY=<your key>
+   ```
 
 ## Download Models
 

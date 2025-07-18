@@ -28,7 +28,7 @@
 ## Example
 
 ```yaml
-glm_api_url: https://api.example.com/glm41v_9b
+glm_api_url: http://localhost:8001
 glm_api_key: your-api-key
 model_path: INANNA_AI/models/GLM-4.1V-9B
 memory_dir: data/vector_memory
@@ -40,3 +40,9 @@ servant_models:
 
 Environment variables with the same names as listed above override the
 corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
+Set `GLM_API_URL` and `GLM_API_KEY` explicitly before launching:
+
+```bash
+export GLM_API_URL=http://localhost:8001
+export GLM_API_KEY=your-api-key
+```

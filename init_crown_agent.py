@@ -86,6 +86,8 @@ def _init_memory(cfg: dict) -> None:
 
 
 def _check_glm(integration: GLMIntegration) -> None:
+    if not integration.endpoint:
+        raise RuntimeError("GLM_API_URL not configured")
     try:
         resp = integration.complete("ping")
     except Exception as exc:  # pragma: no cover - network errors
@@ -127,10 +129,9 @@ def _init_servants(cfg: dict) -> None:
 def initialize_crown() -> GLMIntegration:
     """Return a :class:`GLMIntegration` instance configured from YAML."""
     cfg = _load_config()
-    integration = GLMIntegration(
-        endpoint=cfg.get("glm_api_url"),
-        api_key=cfg.get("glm_api_key"),
-    )
+    endpoint = os.getenv("GLM_API_URL", cfg.get("glm_api_url"))
+    api_key = os.getenv("GLM_API_KEY", cfg.get("glm_api_key"))
+    integration = GLMIntegration(endpoint=endpoint, api_key=api_key)
     if cfg.get("model_path"):
         os.environ.setdefault("MODEL_PATH", str(cfg["model_path"]))
     _init_memory(cfg)
