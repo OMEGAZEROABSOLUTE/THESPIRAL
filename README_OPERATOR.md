@@ -541,6 +541,13 @@ open the interactive console once the endpoints are ready.
 ./start_crown_console.sh
 ```
 
+Alternatively run the Python wrapper to load `secrets.env`, start the
+console and streaming server, and wait for both processes:
+
+```bash
+python start_crown_console.py
+```
+
 After initialization the console displays the prompt:
 
 ```
