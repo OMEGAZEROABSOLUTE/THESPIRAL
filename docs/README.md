@@ -43,3 +43,5 @@ Milestone VIII expands on the sovereign voice work with memory-aided routing and
 - [../start_avatar_console.sh](../start_avatar_console.sh)
 - [spiral_cortex_terminal.md](spiral_cortex_terminal.md)
 - [spiritual_architecture.md](spiritual_architecture.md)
+
+Recent updates add tests for the fallback text-to-speech helper and verify connectivity to the GLM service during initialization.
