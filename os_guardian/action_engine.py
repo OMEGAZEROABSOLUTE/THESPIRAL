@@ -7,6 +7,7 @@ import shlex
 import subprocess
 from pathlib import Path
 from typing import Optional, Sequence
+from urllib.parse import urlparse
 
 from . import safety
 
@@ -81,6 +82,7 @@ def run_command(cmd: str | Sequence[str]) -> subprocess.CompletedProcess[str] | 
         return None
     try:
         proc = subprocess.run(args, capture_output=True, text=True, check=False)
+        safety.record_command(binary)
         return proc
     except OSError as exc:  # pragma: no cover - OS dependent
         logger.error("Failed to run %s: %s", binary, exc)
@@ -98,6 +100,7 @@ def open_url(
         return None
     drv = driver or webdriver.Firefox()
     drv.get(url)
+    safety.record_domain(urlparse(url).hostname or "")
     safety.register_undo(lambda: getattr(drv, "quit", lambda: None)())
     return drv
 
@@ -125,3 +128,4 @@ __all__ = [
     "open_url",
     "run_js",
 ]
+

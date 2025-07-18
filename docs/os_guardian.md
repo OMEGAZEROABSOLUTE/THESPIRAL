@@ -8,3 +8,30 @@ The OS Guardian coordinates system automation under strict policy control. It co
 4. **Safety** – checks permissions for commands, domains and applications while tracking undo callbacks.
 
 These modules can be invoked individually or through the ``os-guardian`` command line interface.
+
+## Policy File
+
+Permissions may also be configured in a YAML policy referenced by the
+``OG_POLICY_FILE`` environment variable. The file supports allowlists and simple
+rate limits:
+
+```yaml
+policy: ask                        # allow, ask or deny actions
+allowed_commands:
+  - echo
+  - ls
+command_limits:
+  rm:
+    max: 1                         # once per day
+    window: 86400                  # seconds
+allowed_domains:
+  - example.com
+domain_limits:
+  example.com:
+    max: 5                         # five visits per hour
+    window: 3600
+```
+
+Set ``OG_POLICY_FILE=/path/to/policy.yaml`` before launching the tools so the
+safety module can enforce these limits.
+
