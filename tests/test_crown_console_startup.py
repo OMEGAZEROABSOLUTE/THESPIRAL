@@ -1,5 +1,7 @@
 import os
 import subprocess
+import sys
+import types
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -7,6 +9,14 @@ ROOT = Path(__file__).resolve().parents[1]
 
 def test_crown_console_startup(monkeypatch):
     calls: list[str] = []
+
+    dummy_orch = types.SimpleNamespace(route=lambda *a, **k: {"voice_path": "x.wav"})
+    dummy_av = types.SimpleNamespace(stream_avatar_audio=lambda p: iter(()))
+    dummy_speak = types.SimpleNamespace(play_wav=lambda p: None)
+
+    monkeypatch.setitem(sys.modules, "orchestrator", types.SimpleNamespace(MoGEOrchestrator=lambda: dummy_orch))
+    monkeypatch.setitem(sys.modules, "core.avatar_expression_engine", dummy_av)
+    monkeypatch.setitem(sys.modules, "INANNA_AI.speaking_engine", dummy_speak)
 
     def fake_run(cmd, *args, **kwargs):
         calls.append(" ".join(cmd) if isinstance(cmd, list) else cmd)
