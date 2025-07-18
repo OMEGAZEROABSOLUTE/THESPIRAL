@@ -585,8 +585,10 @@ start the servant models without relaunching the main GLM service.
 ./launch_servants.sh
 ```
 
-Use `start_crown_console.sh` to launch these services and automatically
-open the interactive console once the endpoints are ready.
+Use `start_crown_console.sh` to launch these services. The script first
+invokes `scripts/check_prereqs.sh` to verify that Docker, `nc`, `sox` and
+`ffmpeg` are available, then automatically opens the interactive console once
+the endpoints are ready.
 
 ```bash
 ./start_crown_console.sh
@@ -604,6 +606,9 @@ Stop all services and the video stream with:
 ```bash
 scripts/stop_crown_console.sh
 ```
+
+This stop script terminates running containers, removes any saved PID files
+and cleans up stray processes related to the Crown console.
 
 After initialization the console displays the prompt:
 

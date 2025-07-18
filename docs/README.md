@@ -49,3 +49,6 @@ format is detailed in [os_guardian.md](os_guardian.md).
 - [spiritual_architecture.md](spiritual_architecture.md)
 
 Recent updates add tests for the fallback text-to-speech helper and verify connectivity to the GLM service during initialization.
+The startup script `start_crown_console.sh` now checks for Docker, `nc`, `sox`
+and `ffmpeg` via `scripts/check_prereqs.sh` before launching. Use
+`scripts/stop_crown_console.sh` to terminate all processes when shutting down.
