@@ -37,8 +37,8 @@ The requirements include common libraries like `numpy` and `scipy` as well as
 
 ### Environment variables
 
-Create a `secrets.env` file in the repository root and define the following
-variables used by the tools and Docker setup:
+Run `bash scripts/setup_local.sh` to create `secrets.env` in the repository root
+and define the following variables used by the tools and Docker setup:
 
 - `HF_TOKEN` – Hugging Face token for downloading models
 - `GITHUB_TOKEN` – optional GitHub token for scraping repositories
