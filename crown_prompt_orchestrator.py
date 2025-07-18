@@ -6,6 +6,7 @@ from typing import Any, Dict
 import asyncio
 
 from state_transition_engine import StateTransitionEngine
+from os_guardian import execute_instruction
 
 from INANNA_AI.glm_integration import GLMIntegration
 from INANNA_AI import emotion_analysis
@@ -46,6 +47,11 @@ async def _delegate(prompt: str, glm: GLMIntegration) -> str:
 
 def crown_prompt_orchestrator(message: str, glm: GLMIntegration) -> Dict[str, Any]:
     """Return GLM or servant model reply with metadata."""
+    stripped = message.strip()
+    if stripped.startswith("/osg"):
+        command = stripped[len("/osg"):].lstrip()
+        execute_instruction(command)
+        return {"action": "os_guardian", "command": command}
     emotion = _detect_emotion(message)
     archetype = emotion_analysis.emotion_to_archetype(emotion)
     weight = emotion_analysis.emotion_weight(emotion)

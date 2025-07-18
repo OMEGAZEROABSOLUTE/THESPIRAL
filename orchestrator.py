@@ -54,6 +54,7 @@ from tools import reflection_loop
 from INANNA_AI import listening_engine
 import vector_memory
 import archetype_shift_engine
+from os_guardian import execute_instruction
 
 # Emotion to model lookup derived from docs/crown_manifest.md
 _EMOTION_MODEL_MATRIX = {
@@ -343,6 +344,11 @@ class MoGEOrchestrator:
 
     def handle_input(self, text: str) -> Dict[str, Any]:
         """Parse ``text`` as QNL, update mood and delegate to :meth:`route`."""
+        stripped = text.strip()
+        if stripped.startswith("/osg"):
+            command = stripped[len("/osg"):].lstrip()
+            execute_instruction(command)
+            return {"action": "os_guardian", "command": command}
         # Detect simple command phrases
         for intent in task_parser.parse(text):
             action = intent.get("action")
