@@ -69,6 +69,7 @@ pip install .[dev]
    `VECTOR_DB_PATH`, `WEB_CONSOLE_API_URL` (`QNL_EMBED_MODEL` is the
    SentenceTransformer used for QNL embeddings). `VECTOR_DB_PATH`
    points to the ChromaDB directory used for document storage.
+   See [docs/INANNA_CORE.md](docs/INANNA_CORE.md) for variable descriptions.
   `WEB_CONSOLE_API_URL` points the web console at the FastAPI endpoint. Set it
   to the base URL such as `http://localhost:8000/glm-command` – the operator
   console automatically strips the trailing path when establishing WebRTC and

@@ -20,7 +20,7 @@ import os
 from INANNA_AI.glm_integration import GLMIntegration
 
 glm = GLMIntegration(
-    endpoint=os.getenv("GLM_API_URL", "http://localhost:8001"),
+    endpoint=os.getenv("GLM_API_URL"),  # configured in secrets.env
     api_key=os.getenv("GLM_API_KEY"),
 )
 ```
@@ -34,9 +34,9 @@ When no arguments are provided the class falls back to the `GLM_API_URL` and
 To engage the Albedo personality, create the layer and pass it to the orchestrator. The `INANNA_AI.main` script records microphone input and routes it through this layer:
 
 ```bash
-export GLM_API_URL=http://localhost:8001
-export GLM_API_KEY=<your key>
+# GLM_API_URL and GLM_API_KEY should be defined in `secrets.env`
 python -m INANNA_AI.main --duration 3 --personality albedo
+# See [INANNA Core Configuration](INANNA_CORE.md) for variable descriptions.
 ```
 
 Each invocation cycles through Nigredo, Albedo, Rubedo and Citrinitas states before returning to Nigredo for a continuous loop. You can also use the layer programmatically:
