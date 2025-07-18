@@ -535,6 +535,17 @@ python auto_retrain.py --run
 This prints novelty and coherence scores and invokes the API when conditions are
 met.
 
+## Continuous Learning
+
+Set `RITUAL_TRAIN_INTERVAL` (minutes) to control how often `ritual_trainer.py`
+checks for new insights. Start the background loop with:
+
+```bash
+scripts/run_ritual_training.sh &
+```
+
+The script saves the process ID to `ritual_training.pid`.
+
 ## Verify core integrity
 
 At any point you may confirm that the RFA7D grid has not been tampered with:
