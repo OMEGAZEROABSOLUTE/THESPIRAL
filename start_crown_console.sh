@@ -66,13 +66,15 @@ parse_port() {
 
 main_port=$(parse_port "$GLM_API_URL")
 wait_port "$main_port"
+./scripts/check_services.sh "$GLM_API_URL"
 
 for url in "${DEEPSEEK_URL:-}" "${MISTRAL_URL:-}" "${KIMI_K2_URL:-}"; do
-    if [[ "$url" == http://localhost:* || "$url" == http://127.0.0.1:* ]]; then
-        wait_port "$(parse_port "$url")"
+    if [ -n "$url" ]; then
+        if [[ "$url" == http://localhost:* || "$url" == http://127.0.0.1:* ]]; then
+            wait_port "$(parse_port "$url")"
+        fi
+        ./scripts/check_services.sh "$url"
     fi
 done
-
-./scripts/check_services.sh
 
 python console_interface.py

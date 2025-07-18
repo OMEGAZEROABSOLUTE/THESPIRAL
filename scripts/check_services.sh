@@ -1,5 +1,5 @@
 #!/bin/bash
-# Query /health and /ready for each configured LLM service.
+# Query /health and /ready until success or timeout.
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
@@ -13,28 +13,46 @@ if [ -f "$ROOT_DIR/secrets.env" ]; then
     set +a
 fi
 
-check_service() {
+
+# Poll a service every second until both endpoints respond or a timeout occurs.
+wait_for_service() {
     local base="${1%/}"
-    for path in health ready; do
-        if ! curl -fsS -m 5 "$base/$path" >/dev/null; then
-            echo "Service at $base failed $path check" >&2
+    local timeout="${2:-30}"
+    local start
+    start=$(date +%s)
+    printf 'Waiting for %s...\n' "$base"
+    while true; do
+        local ok=1
+        for path in health ready; do
+            if ! curl -fsS -m 5 "$base/$path" >/dev/null; then
+                ok=0
+                break
+            fi
+        done
+        if [ "$ok" -eq 1 ]; then
+            printf '%s is healthy.\n' "$base"
+            return 0
+        fi
+        if [ $(( $(date +%s) - start )) -ge "$timeout" ]; then
+            printf 'Timeout waiting for %s\n' "$base" >&2
             return 1
         fi
+        sleep 1
     done
 }
 
-failed=0
-for url in "$GLM_API_URL" "${DEEPSEEK_URL:-}" "${MISTRAL_URL:-}" "${KIMI_K2_URL:-}"; do
-    [ -n "$url" ] || continue
-    echo "Checking $url..."
-    if ! check_service "$url"; then
-        echo "Service $url not responding" >&2
-        failed=1
+main() {
+    local timeout="${CHECK_TIMEOUT:-30}"
+    if [ "$#" -gt 0 ]; then
+        for url in "$@"; do
+            wait_for_service "$url" "$timeout" || return 1
+        done
+    else
+        for url in "$GLM_API_URL" "${DEEPSEEK_URL:-}" "${MISTRAL_URL:-}" "${KIMI_K2_URL:-}"; do
+            [ -n "$url" ] || continue
+            wait_for_service "$url" "$timeout" || return 1
+        done
     fi
-done
+}
 
-if [ "$failed" -ne 0 ]; then
-    exit 1
-fi
-
-echo "All services are healthy."
+main "$@"
