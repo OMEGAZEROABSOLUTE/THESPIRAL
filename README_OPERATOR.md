@@ -76,6 +76,21 @@ Configuration options for `config/INANNA_CORE.yaml` and the corresponding
 environment variables are explained in
 [docs/INANNA_CORE.md](docs/INANNA_CORE.md).
 
+### Adaptación para Vast.ai
+
+En un servidor Vast.ai normalmente se utilizan los siguientes puertos:
+
+- `8000` para la interfaz FastAPI.
+- `8001` para el servicio GLM principal.
+- `8002` para DeepSeek.
+- `8003` para Mistral.
+- `8010` para Kimi‑K2.
+
+Los modelos suelen almacenarse bajo `/workspace/THESPIRAL/INANNA_AI/models`.
+Establezca en `secrets.env` las URLs de cada servicio con la IP pública de la
+instancia, por ejemplo `GLM_API_URL=http://<ip>:8001`. Ajuste de igual forma
+`DEEPSEEK_URL`, `MISTRAL_URL` y `KIMI_K2_URL` si están activos.
+
 ## Script overview
 
 - **`INANNA_AI_AGENT/inanna_ai.py`** – Activation agent that loads source texts and can recite the INANNA birth chant or feed hex data into the QNL engine. Use `--list` to show available texts.
