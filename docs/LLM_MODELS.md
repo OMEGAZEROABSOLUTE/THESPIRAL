@@ -95,11 +95,11 @@ be overridden with environment variables:
 - `MISTRAL_URL` – optional endpoint for the Mistral servant model.
 - `KIMI_K2_URL` – optional endpoint for the Kimi-K2 servant model.
 
-Example overrides:
+Example overrides (set these in `secrets.env`):
 
 ```bash
-export GLM_API_URL=http://localhost:8001
 export MEMORY_DIR=/data/spiral_memory
+# GLM_API_URL is also read from secrets.env
 ```
 
 Running `./crown_model_launcher.sh` reads `secrets.env` and starts a compatible

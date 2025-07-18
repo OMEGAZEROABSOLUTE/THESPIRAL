@@ -27,22 +27,20 @@
 
 ## Example
 
+Values typically come from `secrets.env`:
+
 ```yaml
-glm_api_url: http://localhost:8001
-glm_api_key: your-api-key
+glm_api_url: ${GLM_API_URL}
+glm_api_key: ${GLM_API_KEY}
 model_path: INANNA_AI/models/GLM-4.1V-9B
 memory_dir: data/vector_memory
 servant_models:
-  deepseek: http://localhost:8002
-  mistral: http://localhost:8003
-  kimi_k2: http://localhost:8010
+  deepseek: ${DEEPSEEK_URL}
+  mistral: ${MISTRAL_URL}
+  kimi_k2: ${KIMI_K2_URL}
 ```
 
-Environment variables with the same names as listed above override the
+Environment variables with the same names override the
 corresponding entries when `init_crown_agent.initialize_crown()` loads the file.
-Set `GLM_API_URL` and `GLM_API_KEY` explicitly before launching:
-
-```bash
-export GLM_API_URL=http://localhost:8001
-export GLM_API_KEY=your-api-key
-```
+See `secrets.env.example` for sample values and set `GLM_API_URL` and
+`GLM_API_KEY` there before launching.
