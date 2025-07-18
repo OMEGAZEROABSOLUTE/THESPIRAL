@@ -88,3 +88,15 @@ bash scripts/vast_start.sh
 ```
 
 It tails the container logs so you can monitor the startup process. When the server becomes ready the browser window automatically loads the web console, which streams audio and video via WebRTC.
+
+## View system metrics
+
+The optional `monitor` service exposes hardware statistics collected by
+`system_monitor.py`. Start it alongside the main stack with:
+
+```bash
+docker-compose up monitor
+```
+
+Once running, open `http://localhost:9100/stats` to see real‑time CPU, GPU and
+memory usage as JSON.

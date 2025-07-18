@@ -18,7 +18,10 @@ Configuration values such as the log directory and default pcap path are read fr
 
 ## `system_monitor.py`
 
-`system_monitor` collects CPU, memory and network statistics via `psutil`. Run it with `--watch` to continuously print JSON formatted data or without arguments to output a single sample.
+`system_monitor` collects CPU, GPU, memory and network statistics. Run it with
+`--watch` to continuously print JSON formatted data or without arguments to
+output a single sample. Use `--serve` to expose a FastAPI endpoint at
+`/stats` for remote monitoring.
 
 ## Environment variables
 
