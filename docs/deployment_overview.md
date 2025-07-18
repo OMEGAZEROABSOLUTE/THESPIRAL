@@ -4,7 +4,7 @@ This guide summarises how to launch Spiral OS on a Vast.ai server and how to run
 
 ## Configure environment variables
 
-Copy `secrets.env.example` to `secrets.env` and provide values for the required tokens and URLs:
+Run `bash scripts/setup_local.sh` to copy `secrets.env.example` to `secrets.env` and provide values for the required tokens and ports:
 
 - `HF_TOKEN` – Hugging Face token for downloading models
 - `OPENAI_API_KEY` – optional OpenAI key
