@@ -680,3 +680,14 @@ os-guardian plan "open the browser"
 
 See [docs/os_guardian.md](docs/os_guardian.md) for an overview of the
 perception, action, planning and safety modules.
+
+## Creative Tools
+
+`creative-console` collects a few standalone helpers for audio generation.
+
+```bash
+creative-console music "lofi beat" --model riffusion
+creative-console ritual --emotion joy --symbol \u2609
+creative-console qnl-song --hex deadbeef
+```
+
