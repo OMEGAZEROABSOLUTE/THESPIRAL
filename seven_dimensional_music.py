@@ -8,6 +8,7 @@ from pathlib import Path
 
 import numpy as np
 import soundfile as sf
+import librosa
 
 from MUSIC_FOUNDATION.qnl_utils import quantum_embed
 def embedding_to_params(_emb):
@@ -15,16 +16,43 @@ def embedding_to_params(_emb):
     return 0.0, 1.0, 1.0
 
 
-def analyze_seven_planes(*_args, **_kwargs) -> dict:
-    """Return dummy plane analysis."""
+def analyze_seven_planes(waveform: np.ndarray, sample_rate: int) -> dict:
+    """Return spectral metrics mapped to seven planes.
+
+    Metrics:
+        physical.rms: Root mean square amplitude.
+        emotional.centroid: Spectral centroid (Hz).
+        mental.flux: Mean spectral flux.
+        astral.bandwidth: Spectral bandwidth (Hz).
+        etheric.rolloff: Spectral rolloff (Hz).
+        celestial.flatness: Spectral flatness.
+        divine.zcr: Zero crossing rate.
+    """
+
+    wave = waveform.mean(axis=1) if waveform.ndim == 2 else waveform
+    rms = float(librosa.feature.rms(y=wave).mean())
+    centroid = float(
+        librosa.feature.spectral_centroid(y=wave, sr=sample_rate).mean()
+    )
+    onset_env = librosa.onset.onset_strength(y=wave, sr=sample_rate)
+    flux = float(np.mean(np.abs(np.diff(onset_env)))) if len(onset_env) > 1 else 0.0
+    bandwidth = float(
+        librosa.feature.spectral_bandwidth(y=wave, sr=sample_rate).mean()
+    )
+    rolloff = float(
+        librosa.feature.spectral_rolloff(y=wave, sr=sample_rate).mean()
+    )
+    flatness = float(librosa.feature.spectral_flatness(y=wave).mean())
+    zcr = float(librosa.feature.zero_crossing_rate(y=wave).mean())
+
     return {
-        "physical": {"element": "bass"},
-        "emotional": {},
-        "mental": {},
-        "astral": {},
-        "etheric": {},
-        "celestial": {},
-        "divine": {},
+        "physical": {"rms": rms},
+        "emotional": {"centroid": centroid},
+        "mental": {"flux": flux},
+        "astral": {"bandwidth": bandwidth},
+        "etheric": {"rolloff": rolloff},
+        "celestial": {"flatness": flatness},
+        "divine": {"zcr": zcr},
     }
 
 
