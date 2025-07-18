@@ -11,6 +11,7 @@ class ContextTracker:
 
     in_call: bool = False
     avatar_loaded: bool = False
+    avatar_style: str | None = None
 
 
 state = ContextTracker()
